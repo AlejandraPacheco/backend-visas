@@ -3,6 +3,7 @@ package com.gestionvisas.backend_visas.bl;
 import com.gestionvisas.backend_visas.dao.jpa.Solicitud;
 import com.gestionvisas.backend_visas.dao.repository.SolicitudRepository;
 import com.gestionvisas.backend_visas.models.DashboardSolicitanteDto;
+import com.gestionvisas.backend_visas.models.DetalleSolicitudDto;
 import com.gestionvisas.backend_visas.models.SolicitudDto;
 import com.gestionvisas.backend_visas.dao.repository.SolicitanteRepository;
 import com.gestionvisas.backend_visas.dao.repository.PaisRepository;
@@ -106,6 +107,27 @@ public class SolicitudBl {
         }
 
         return solicitudRepository.save(s);
+    }
+
+    public DetalleSolicitudDto obtenerDetalleSolicitudPorId(int idSolicitud) {
+        Solicitud s = solicitudRepository.findById(idSolicitud)
+                .orElseThrow(() -> new RuntimeException("Solicitud no encontrada"));
+
+        DetalleSolicitudDto dto = new DetalleSolicitudDto();
+        dto.setIdSolicitud(s.getIdSolicitud());
+        dto.setIdSolicitante(s.getIdSolicitante().getIdSolicitante());
+        dto.setFechaSolicitud(s.getFechaSolicitud());
+        dto.setApellidos(s.getApellidos());
+        dto.setNombres(s.getNombres());
+        dto.setNacionalidad(s.getNacionalidad());
+        dto.setCi(s.getCi());
+        dto.setProfesion(s.getProfesion());
+        dto.setIdMotivo(s.getIdMotivo() != null ? s.getIdMotivo().getIdMotivo() : 0);
+        dto.setFechaLlegadaSpain(s.getFechaLlegadaSpain());
+        dto.setFechaSalidaSpain(s.getFechaSalidaSpain());
+        dto.setEstado(s.getEstado());
+
+        return dto;
     }
 
 

@@ -2,6 +2,7 @@ package com.gestionvisas.backend_visas.api;
 
 import com.gestionvisas.backend_visas.bl.SolicitudBl;
 import com.gestionvisas.backend_visas.models.DashboardSolicitanteDto;
+import com.gestionvisas.backend_visas.models.DetalleSolicitudDto;
 import com.gestionvisas.backend_visas.models.ResponseDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +32,13 @@ public class SolicitudApi {
         Solicitud nuevaSolicitud = solicitudBl.crearSolicitud(solicitudDto);
         return ResponseEntity.ok(nuevaSolicitud);
     }
+
+    @GetMapping("/{id}")
+    public DetalleSolicitudDto getDetalleSolicitud(@PathVariable int id) {
+        return solicitudBl.obtenerDetalleSolicitudPorId(id);
+    }
+
+
 
 }
 
