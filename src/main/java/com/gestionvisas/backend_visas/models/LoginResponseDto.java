@@ -10,12 +10,12 @@ import lombok.Setter;
 public class LoginResponseDto {
     private String token;
     private String username;
-    private String role;
+    private String rol;
 
-    public LoginResponseDto(String token, String username, String role) {
+    public LoginResponseDto(String token, String username, String rol) {
         this.token = token;
         this.username = username;
-        this.role = role;
+        this.rol = rol;
     }
 
     // getters y setters
