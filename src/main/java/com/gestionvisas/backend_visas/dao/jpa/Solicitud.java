@@ -3,9 +3,13 @@ package com.gestionvisas.backend_visas.dao.jpa;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.Date;
 
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.annotations.Type;
+import org.hibernate.type.SqlTypes;
 
 @Getter
 @Setter
@@ -37,7 +41,7 @@ public class Solicitud {
 
     @Column(name = "fecha_nacimiento")
     @Temporal(TemporalType.DATE)
-    private Date fechaNacimiento;
+    private LocalDate fechaNacimiento;
 
     @ManyToOne
     @JoinColumn(name = "id_pais_de_nacimiento")
@@ -62,11 +66,11 @@ public class Solicitud {
 
     @Column(name = "fecha_expedicion_pasaporte")
     @Temporal(TemporalType.DATE)
-    private Date fechaExpedicionPasaporte;
+    private LocalDate fechaExpedicionPasaporte;
 
     @Column(name = "fecha_vencimiento_pasaporte")
     @Temporal(TemporalType.DATE)
-    private Date fechaVencimientoPasaporte;
+    private LocalDate fechaVencimientoPasaporte;
 
     @ManyToOne
     @JoinColumn(name = "id_pais_expedicion_pasaporte")
@@ -81,14 +85,15 @@ public class Solicitud {
 
     @Column(name = "fecha_llegada_spain")
     @Temporal(TemporalType.DATE)
-    private Date fechaLlegadaSpain;
+    private LocalDate fechaLlegadaSpain;
 
     @Column(name = "fecha_salida_spain")
     @Temporal(TemporalType.DATE)
-    private Date fechaSalidaSpain;
+    private LocalDate fechaSalidaSpain;
 
-    @Column(name = "fotografia")
     @Lob
+    @JdbcTypeCode(SqlTypes.BINARY)
+    @Column(name = "fotografia")
     private byte[] fotografia;
 
     @Column(name = "estado")

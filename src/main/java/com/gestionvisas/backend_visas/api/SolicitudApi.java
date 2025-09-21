@@ -3,8 +3,10 @@ package com.gestionvisas.backend_visas.api;
 import com.gestionvisas.backend_visas.bl.SolicitudBl;
 import com.gestionvisas.backend_visas.models.DashboardSolicitanteDto;
 import com.gestionvisas.backend_visas.models.ResponseDto;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.gestionvisas.backend_visas.dao.jpa.Solicitud;
+import com.gestionvisas.backend_visas.models.SolicitudDto;
 
 import java.util.List;
 
@@ -23,5 +25,12 @@ public class SolicitudApi {
     public List<DashboardSolicitanteDto> getSolicitudes(@PathVariable int id) {
         return solicitudBl.obtenerSolicitudesPorUsuario(id);
     }
+
+    @PostMapping("/")
+    public ResponseEntity<Solicitud> crearSolicitud(@RequestBody SolicitudDto solicitudDto) {
+        Solicitud nuevaSolicitud = solicitudBl.crearSolicitud(solicitudDto);
+        return ResponseEntity.ok(nuevaSolicitud);
+    }
+
 }
 
