@@ -3,7 +3,11 @@ package com.gestionvisas.backend_visas.api;
 import com.gestionvisas.backend_visas.bl.AuthService;
 import com.gestionvisas.backend_visas.models.LoginRequestDto;
 import com.gestionvisas.backend_visas.models.LoginResponseDto;
+import com.gestionvisas.backend_visas.models.ResponseDto;
+import com.gestionvisas.backend_visas.dao.jpa.Usuario;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -17,12 +21,15 @@ public class AuthApi {
     }
 
     @PostMapping("/login")
-    public LoginResponseDto login(@RequestBody LoginRequestDto request) {
-        boolean success = authService.login(request.getUsername(), request.getPassword());
-        if (success) {
-            return new LoginResponseDto(true, "Login exitoso ✅");
+    public ResponseDto<LoginResponseDto> login(@RequestBody LoginRequestDto request) {
+        Optional<Usuario> userOpt = authService.findByUsername(request.getUsername());
+        if (userOpt.isPresent() && authService.login(request.getUsername(), request.getPassword())) {
+            Usuario user = userOpt.get();
+            String token = authService.generateToken(user.getUsername(), user.getIdRol().getNombreRol());
+            return new ResponseDto<>("200", new LoginResponseDto(token, user.getUsername(), user.getIdRol().getNombreRol()), null);
         } else {
-            return new LoginResponseDto(false, "Usuario o contraseña incorrectos ❌");
+            return new ResponseDto<>("401", null, "Usuario o contraseña incorrectos");
         }
     }
+
 }

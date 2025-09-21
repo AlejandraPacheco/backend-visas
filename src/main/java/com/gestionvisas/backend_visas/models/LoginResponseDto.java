@@ -8,11 +8,16 @@ import lombok.Setter;
 @Setter
 @Data
 public class LoginResponseDto {
-    private boolean success;
-    private String message;
+    private String token;
+    private String username;
+    private String role;
 
-    public LoginResponseDto(boolean success, String message) {
-        this.success = success;
-        this.message = message;
+    public LoginResponseDto(String token, String username, String role) {
+        this.token = token;
+        this.username = username;
+        this.role = role;
     }
+
+    // getters y setters
 }
+
