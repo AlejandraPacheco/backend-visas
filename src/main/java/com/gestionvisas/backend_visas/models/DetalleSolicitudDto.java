@@ -17,7 +17,7 @@ public class DetalleSolicitudDto {
     private String nacionalidad;
     private String ci;
     private String profesion;
-    private int idMotivo;
+    private String motivoDescripcion;
     private LocalDate fechaLlegadaSpain;
     private LocalDate fechaSalidaSpain;
     private String estado;

@@ -122,13 +122,14 @@ public class SolicitudBl {
         dto.setNacionalidad(s.getNacionalidad());
         dto.setCi(s.getCi());
         dto.setProfesion(s.getProfesion());
-        dto.setIdMotivo(s.getIdMotivo() != null ? s.getIdMotivo().getIdMotivo() : 0);
+        dto.setMotivoDescripcion(s.getIdMotivo() != null ? s.getIdMotivo().getDescripcion() : ""); // <-- aquí
         dto.setFechaLlegadaSpain(s.getFechaLlegadaSpain());
         dto.setFechaSalidaSpain(s.getFechaSalidaSpain());
         dto.setEstado(s.getEstado());
 
         return dto;
     }
+
 
 
 }
