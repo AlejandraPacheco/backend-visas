@@ -9,9 +9,11 @@ import com.gestionvisas.backend_visas.dao.repository.PaisRepository;
 import com.gestionvisas.backend_visas.dao.repository.SexoRepository;
 import com.gestionvisas.backend_visas.dao.repository.EstadoCivilRepository;
 import com.gestionvisas.backend_visas.dao.repository.MotivosViajeRepository;
+import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
@@ -95,7 +97,7 @@ public class SolicitudBl {
         s.setFechaVencimientoPasaporte(dto.getFechaVencimientoPasaporte());
         s.setFechaLlegadaSpain(dto.getFechaLlegadaSpain());
         s.setFechaSalidaSpain(dto.getFechaSalidaSpain());
-        s.setFechaSolicitud(new Timestamp(System.currentTimeMillis()));// fecha actual
+        s.setFechaSolicitud( LocalDate.now());
         s.setEstado("En revisión");
 
         // Fotografía (si se envía base64)

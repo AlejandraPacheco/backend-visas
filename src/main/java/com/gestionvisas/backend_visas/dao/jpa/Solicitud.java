@@ -31,7 +31,7 @@ public class Solicitud {
 
     @Column(name = "fecha_solicitud")
     @Temporal(TemporalType.DATE)
-    private Timestamp fechaSolicitud;
+    private LocalDate fechaSolicitud;
 
     @Column(name = "apellidos")
     private String apellidos;

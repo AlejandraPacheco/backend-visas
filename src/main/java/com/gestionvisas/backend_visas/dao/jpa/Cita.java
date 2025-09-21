@@ -3,6 +3,7 @@ package com.gestionvisas.backend_visas.dao.jpa;
 import jakarta.persistence.*;
 
 import java.sql.Time;
+import java.time.LocalDate;
 import java.util.Date;
 import lombok.*;
 
@@ -25,8 +26,7 @@ public class Cita {
     private Solicitud idSolicitud;
 
     @Column(name = "fecha")
-    @Temporal(TemporalType.DATE)
-    private Date fechaCita;
+    private LocalDate fechaCita;
 
     @Column(name = "hora")
     private Time horaCita;
