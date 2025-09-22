@@ -13,5 +13,8 @@ import java.util.Optional;
 @Repository
 public interface CitaRepository extends JpaRepository<Cita, Integer> {
     List<Cita> findByFechaCitaBetween(LocalDate inicio, LocalDate fin);
+
+    // Contador de citas en rango
+    long countByFechaCitaBetween(LocalDate inicio, LocalDate fin);
 }
 

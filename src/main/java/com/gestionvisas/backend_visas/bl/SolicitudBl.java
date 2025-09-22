@@ -4,12 +4,14 @@ import com.gestionvisas.backend_visas.dao.jpa.Solicitud;
 import com.gestionvisas.backend_visas.dao.repository.SolicitudRepository;
 import com.gestionvisas.backend_visas.models.DashboardSolicitanteDto;
 import com.gestionvisas.backend_visas.models.DetalleSolicitudDto;
+import com.gestionvisas.backend_visas.models.ReporteDto;
 import com.gestionvisas.backend_visas.models.SolicitudDto;
 import com.gestionvisas.backend_visas.dao.repository.SolicitanteRepository;
 import com.gestionvisas.backend_visas.dao.repository.PaisRepository;
 import com.gestionvisas.backend_visas.dao.repository.SexoRepository;
 import com.gestionvisas.backend_visas.dao.repository.EstadoCivilRepository;
 import com.gestionvisas.backend_visas.dao.repository.MotivosViajeRepository;
+import com.gestionvisas.backend_visas.dao.repository.CitaRepository;
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import org.springframework.stereotype.Service;
 
@@ -29,19 +31,22 @@ public class SolicitudBl {
     private final SexoRepository sexoRepository;
     private final EstadoCivilRepository estadoCivilRepository;
     private final MotivosViajeRepository motivosViajeRepository;
+    private final CitaRepository citaRepository;
 
     public SolicitudBl(SolicitudRepository solicitudRepository,
                        SolicitanteRepository solicitanteRepository,
                        PaisRepository paisRepository,
                        SexoRepository sexoRepository,
                        EstadoCivilRepository estadoCivilRepository,
-                       MotivosViajeRepository motivosViajeRepository) {
+                       MotivosViajeRepository motivosViajeRepository,
+                       CitaRepository citaRepository) {
         this.solicitudRepository = solicitudRepository;
         this.solicitanteRepository = solicitanteRepository;
         this.paisRepository = paisRepository;
         this.sexoRepository = sexoRepository;
         this.estadoCivilRepository = estadoCivilRepository;
         this.motivosViajeRepository = motivosViajeRepository;
+        this.citaRepository = citaRepository;
     }
 
     public List<DashboardSolicitanteDto> obtenerSolicitudesPorUsuario(int idSolicitante) {
@@ -187,6 +192,40 @@ public class SolicitudBl {
         return dto;
     }
 
+    public SolicitudDto obtenerDetalleSolicitudAdministrador(int idSolicitud) {
+        Solicitud s = solicitudRepository.findById(idSolicitud)
+                .orElseThrow(() -> new RuntimeException("Solicitud no encontrada"));
+
+        SolicitudDto dto = new SolicitudDto();
+        dto.setIdSolicitud(s.getIdSolicitud());
+        dto.setIdSolicitante(s.getIdSolicitante().getIdSolicitante());
+        dto.setFechaSolicitud(s.getFechaSolicitud());
+        dto.setApellidos(s.getApellidos());
+        dto.setNombres(s.getNombres());
+        dto.setFechaNacimiento(s.getFechaNacimiento());
+        dto.setIdPaisDeNacimiento(s.getIdPaisDeNacimiento() != null ? s.getIdPaisDeNacimiento().getIdPais() : null);
+        dto.setNacionalidad(s.getNacionalidad());
+        dto.setIdSexo(s.getIdSexo() != null ? s.getIdSexo().getIdSexo() : null);
+        dto.setIdEstadoCivil(s.getIdEstadoCivil() != null ? s.getIdEstadoCivil().getIdEstadoCivil() : null);
+        dto.setCi(s.getCi());
+        dto.setNumeroPasaporte(s.getNumeroPasaporte());
+        dto.setFechaExpedicionPasaporte(s.getFechaExpedicionPasaporte());
+        dto.setFechaVencimientoPasaporte(s.getFechaVencimientoPasaporte());
+        dto.setIdPaisExpedicionPasaporte(s.getIdPaisExpedicionPasaporte() != null ? s.getIdPaisExpedicionPasaporte().getIdPais() : null);
+        dto.setProfesion(s.getProfesion());
+        dto.setIdMotivo(s.getIdMotivo() != null ? s.getIdMotivo().getIdMotivo() : null);
+        dto.setFechaLlegadaSpain(s.getFechaLlegadaSpain());
+        dto.setFechaSalidaSpain(s.getFechaSalidaSpain());
+        dto.setEstado(s.getEstado());
+
+        // Fotografía a Base64
+        if (s.getFotografia() != null) {
+            dto.setFotografiaBase64(Base64.getEncoder().encodeToString(s.getFotografia()));
+        }
+
+        return dto;
+    }
+
     public Solicitud actualizarSolicitud(int idSolicitud, SolicitudDto dto) {
         Solicitud s = solicitudRepository.findById(idSolicitud)
                 .orElseThrow(() -> new RuntimeException("Solicitud no encontrada"));
@@ -220,6 +259,7 @@ public class SolicitudBl {
         s.setFechaVencimientoPasaporte(dto.getFechaVencimientoPasaporte());
         s.setFechaLlegadaSpain(dto.getFechaLlegadaSpain());
         s.setFechaSalidaSpain(dto.getFechaSalidaSpain());
+        s.setEstado(dto.getEstado());
 
         // Fotografía (Base64 a byte[])
         if (dto.getFotografiaBase64() != null) {
@@ -234,6 +274,25 @@ public class SolicitudBl {
         return solicitudRepository.save(s);
     }
 
+    public Solicitud obtenerSolicitudPorId(int idSolicitud) {
+        return solicitudRepository.findById(idSolicitud)
+                .orElseThrow(() -> new RuntimeException("Solicitud no encontrada"));
+    }
+
+    /**
+     * Retorna el reporte para un mes y año (ej: mes = 9, anio = 2025).
+     */
+    public ReporteDto obtenerReportePorMes(int mes, int anio) {
+        LocalDate inicio = LocalDate.of(anio, mes, 1);
+        LocalDate fin = inicio.withDayOfMonth(inicio.lengthOfMonth());
+
+        long enRevision = solicitudRepository.countByEstadoAndFechaSolicitudBetween("En revisión", inicio, fin);
+        long aprobadas = solicitudRepository.countByEstadoAndFechaSolicitudBetween("Aprobada", inicio, fin);
+        long rechazadas = solicitudRepository.countByEstadoAndFechaSolicitudBetween("Rechazada", inicio, fin);
+        long totalCitas = citaRepository.countByFechaCitaBetween(inicio, fin);
+
+        return new ReporteDto(enRevision, aprobadas, rechazadas, totalCitas);
+    }
 
 }
 
