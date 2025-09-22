@@ -26,11 +26,22 @@ public class AuthApi {
         if (userOpt.isPresent() && authService.login(request.getUsername(), request.getPassword())) {
             Usuario user = userOpt.get();
             String token = authService.generateToken(user.getUsername(), user.getIdRol().getNombreRol());
-            return new ResponseDto<>("200", new LoginResponseDto(token, user.getUsername(), user.getIdRol().getNombreRol(), user.getIdUsuario()), null);
+
+            Integer idSolicitante = null;
+
+            if ("Solicitante".equalsIgnoreCase(user.getIdRol().getNombreRol())) {
+                // Obtener el idSolicitante desde el repositorio de solicitantes
+                idSolicitante = authService.getIdSolicitanteByUsuario(user.getIdUsuario());
+            }
+
+            return new ResponseDto<>("200",
+                    new LoginResponseDto(token, user.getUsername(), user.getIdRol().getNombreRol(), user.getIdUsuario(), idSolicitante),
+                    null);
         } else {
             return new ResponseDto<>("401", null, "Usuario o contraseña incorrectos");
         }
     }
+
 
 
 

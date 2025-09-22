@@ -1,10 +1,13 @@
 package com.gestionvisas.backend_visas.bl;
 
 import com.gestionvisas.backend_visas.dao.jpa.Usuario;
+import com.gestionvisas.backend_visas.dao.repository.SolicitanteRepository;
 import com.gestionvisas.backend_visas.dao.repository.UsuarioRepository;
 import com.gestionvisas.backend_visas.utils.JwtUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import com.gestionvisas.backend_visas.dao.jpa.Solicitante;
+
 
 import java.util.Optional;
 
@@ -13,9 +16,11 @@ public class AuthService {
 
     private final UsuarioRepository usuarioRepository;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final SolicitanteRepository solicitanteRepository;
 
-    public AuthService(UsuarioRepository usuarioRepository) {
+    public AuthService(UsuarioRepository usuarioRepository, SolicitanteRepository solicitanteRepository) {
         this.usuarioRepository = usuarioRepository;
+        this.solicitanteRepository = solicitanteRepository;
     }
 
     /**
@@ -46,5 +51,11 @@ public class AuthService {
     public boolean login(String username, String password) {
         Optional<Usuario> userOpt = findByUsername(username);
         return userOpt.map(user -> validatePassword(user, password)).orElse(false);
+    }
+
+    public Integer getIdSolicitanteByUsuario(int idUsuario) {
+        return solicitanteRepository.findByIdUsuario_IdUsuario(idUsuario)
+                .map(Solicitante::getIdSolicitante)
+                .orElse(null);
     }
 }

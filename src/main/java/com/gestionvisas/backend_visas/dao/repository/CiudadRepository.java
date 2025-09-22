@@ -6,4 +6,5 @@ import com.gestionvisas.backend_visas.dao.jpa.Ciudad;
 
 @Repository
 public interface CiudadRepository extends JpaRepository<Ciudad, Integer> {
+    Ciudad findByIdCiudad(Integer id);
 }
