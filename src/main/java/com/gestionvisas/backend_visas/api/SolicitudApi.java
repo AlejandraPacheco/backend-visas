@@ -43,5 +43,11 @@ public class SolicitudApi {
         return solicitudBl.obtenerTodasSolicitudes();
     }
 
+    @GetMapping("/funcionario/{id}")
+    public SolicitudDto getDetalleSolicitudFuncionario(@PathVariable int id) {
+        return solicitudBl.obtenerDetalleSolicitudFuncionario(id);
+    }
+
+
 }
 

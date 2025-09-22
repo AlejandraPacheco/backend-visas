@@ -153,6 +153,39 @@ public class SolicitudBl {
         }).collect(Collectors.toList());
     }
 
+    public SolicitudDto obtenerDetalleSolicitudFuncionario(int idSolicitud) {
+        Solicitud s = solicitudRepository.findById(idSolicitud)
+                .orElseThrow(() -> new RuntimeException("Solicitud no encontrada"));
+
+        SolicitudDto dto = new SolicitudDto();
+        dto.setIdSolicitud(s.getIdSolicitud());
+        dto.setIdSolicitante(s.getIdSolicitante().getIdSolicitante());
+        dto.setFechaSolicitud(s.getFechaSolicitud());
+        dto.setApellidos(s.getApellidos());
+        dto.setNombres(s.getNombres());
+        dto.setFechaNacimiento(s.getFechaNacimiento());
+        dto.setIdPaisDeNacimiento(s.getIdPaisDeNacimiento() != null ? s.getIdPaisDeNacimiento().getIdPais() : null);
+        dto.setNacionalidad(s.getNacionalidad());
+        dto.setIdSexo(s.getIdSexo() != null ? s.getIdSexo().getIdSexo() : null);
+        dto.setIdEstadoCivil(s.getIdEstadoCivil() != null ? s.getIdEstadoCivil().getIdEstadoCivil() : null);
+        dto.setCi(s.getCi());
+        dto.setNumeroPasaporte(s.getNumeroPasaporte());
+        dto.setFechaExpedicionPasaporte(s.getFechaExpedicionPasaporte());
+        dto.setFechaVencimientoPasaporte(s.getFechaVencimientoPasaporte());
+        dto.setIdPaisExpedicionPasaporte(s.getIdPaisExpedicionPasaporte() != null ? s.getIdPaisExpedicionPasaporte().getIdPais() : null);
+        dto.setProfesion(s.getProfesion());
+        dto.setIdMotivo(s.getIdMotivo() != null ? s.getIdMotivo().getIdMotivo() : null);
+        dto.setFechaLlegadaSpain(s.getFechaLlegadaSpain());
+        dto.setFechaSalidaSpain(s.getFechaSalidaSpain());
+        dto.setEstado(s.getEstado());
+
+        // Fotografía a Base64
+        if (s.getFotografia() != null) {
+            dto.setFotografiaBase64(Base64.getEncoder().encodeToString(s.getFotografia()));
+        }
+
+        return dto;
+    }
 
 
 
