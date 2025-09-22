@@ -130,6 +130,30 @@ public class SolicitudBl {
         return dto;
     }
 
+    public List<DetalleSolicitudDto> obtenerTodasSolicitudes() {
+        List<Solicitud> solicitudes = solicitudRepository.findAll();
+
+        return solicitudes.stream().map(s -> {
+            DetalleSolicitudDto dto = new DetalleSolicitudDto();
+            dto.setIdSolicitud(s.getIdSolicitud());
+            dto.setIdSolicitante(s.getIdSolicitante().getIdSolicitante());
+            dto.setFechaSolicitud(s.getFechaSolicitud());
+            dto.setApellidos(s.getApellidos());
+            dto.setNombres(s.getNombres());
+            dto.setNacionalidad(s.getNacionalidad());
+            dto.setCi(s.getCi());
+            dto.setProfesion(s.getProfesion());
+            dto.setMotivoDescripcion(
+                    s.getIdMotivo() != null ? s.getIdMotivo().getDescripcion() : null
+            );
+            dto.setFechaLlegadaSpain(s.getFechaLlegadaSpain());
+            dto.setFechaSalidaSpain(s.getFechaSalidaSpain());
+            dto.setEstado(s.getEstado());
+            return dto;
+        }).collect(Collectors.toList());
+    }
+
+
 
 
 }

@@ -8,7 +8,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -20,12 +19,10 @@ public class CitaApi {
     private final CitaService citaService;
 
     @GetMapping("/semana")
-    public List<Cita> listarCitasSemana(
+    public List<CitaDto> listarCitasSemana(
             @RequestParam("fecha") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha) {
         return citaService.listarCitasPorSemana(fecha);
     }
-
-
 
     @PostMapping
     public Cita crearCita(@RequestBody CitaDto dto) {

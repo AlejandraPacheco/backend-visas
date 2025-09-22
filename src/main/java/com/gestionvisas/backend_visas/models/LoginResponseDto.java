@@ -11,11 +11,13 @@ public class LoginResponseDto {
     private String token;
     private String username;
     private String rol;
+    private int idUsuario;
 
-    public LoginResponseDto(String token, String username, String rol) {
+    public LoginResponseDto(String token, String username, String rol, int idUsuario) {
         this.token = token;
         this.username = username;
         this.rol = rol;
+        this.idUsuario = idUsuario;
     }
 
     // getters y setters

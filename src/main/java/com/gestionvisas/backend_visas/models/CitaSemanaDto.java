@@ -9,10 +9,10 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CitaDto {
+public class CitaSemanaDto {
     private int idCita;
-    private int idSolicitud; // Solo enviamos el ID
+    private int idSolicitud;
     private LocalDate fechaCita;
-    private String horaCita; // Formato HH:mm
-    private String nombreCompleto; // agregado para el frontend
+    private String horaCita; // HH:mm
+    private String nombreCompleto; // Solicitante
 }

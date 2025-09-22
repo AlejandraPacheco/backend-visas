@@ -38,7 +38,10 @@ public class SolicitudApi {
         return solicitudBl.obtenerDetalleSolicitudPorId(id);
     }
 
-
+    @GetMapping("/")
+    public List<DetalleSolicitudDto> getTodasSolicitudes() {
+        return solicitudBl.obtenerTodasSolicitudes();
+    }
 
 }
 
