@@ -48,6 +48,14 @@ public class SolicitudApi {
         return solicitudBl.obtenerDetalleSolicitudFuncionario(id);
     }
 
+    @PutMapping("/funcionario/{id}")
+    public ResponseEntity<Solicitud> actualizarSolicitudFuncionario(
+            @PathVariable int id,
+            @RequestBody SolicitudDto solicitudDto) {
+        Solicitud actualizada = solicitudBl.actualizarSolicitud(id, solicitudDto);
+        return ResponseEntity.ok(actualizada);
+    }
+
 
 }
 

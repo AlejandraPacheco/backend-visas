@@ -187,6 +187,52 @@ public class SolicitudBl {
         return dto;
     }
 
+    public Solicitud actualizarSolicitud(int idSolicitud, SolicitudDto dto) {
+        Solicitud s = solicitudRepository.findById(idSolicitud)
+                .orElseThrow(() -> new RuntimeException("Solicitud no encontrada"));
+
+        // Relaciones ManyToOne
+        s.setIdPaisDeNacimiento(
+                dto.getIdPaisDeNacimiento() != null ? paisRepository.findById(dto.getIdPaisDeNacimiento()).orElse(null) : null
+        );
+        s.setIdPaisExpedicionPasaporte(
+                dto.getIdPaisExpedicionPasaporte() != null ? paisRepository.findById(dto.getIdPaisExpedicionPasaporte()).orElse(null) : null
+        );
+        s.setIdSexo(
+                dto.getIdSexo() != null ? sexoRepository.findById(dto.getIdSexo()).orElse(null) : null
+        );
+        s.setIdEstadoCivil(
+                dto.getIdEstadoCivil() != null ? estadoCivilRepository.findById(dto.getIdEstadoCivil()).orElse(null) : null
+        );
+        s.setIdMotivo(
+                dto.getIdMotivo() != null ? motivosViajeRepository.findById(dto.getIdMotivo()).orElse(null) : null
+        );
+
+        // Campos simples
+        s.setApellidos(dto.getApellidos());
+        s.setNombres(dto.getNombres());
+        s.setCi(dto.getCi());
+        s.setNacionalidad(dto.getNacionalidad());
+        s.setNumeroPasaporte(dto.getNumeroPasaporte());
+        s.setProfesion(dto.getProfesion());
+        s.setFechaNacimiento(dto.getFechaNacimiento());
+        s.setFechaExpedicionPasaporte(dto.getFechaExpedicionPasaporte());
+        s.setFechaVencimientoPasaporte(dto.getFechaVencimientoPasaporte());
+        s.setFechaLlegadaSpain(dto.getFechaLlegadaSpain());
+        s.setFechaSalidaSpain(dto.getFechaSalidaSpain());
+
+        // Fotografía (Base64 a byte[])
+        if (dto.getFotografiaBase64() != null) {
+            String base64Image = dto.getFotografiaBase64();
+            if (base64Image.contains(",")) {
+                base64Image = base64Image.split(",")[1]; // tomamos solo la parte después de la coma
+            }
+            s.setFotografia(Base64.getDecoder().decode(base64Image));
+        }
+
+
+        return solicitudRepository.save(s);
+    }
 
 
 }
